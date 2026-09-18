@@ -1,0 +1,17 @@
+SELF-CHECK STATUS
+
+Completed:
+- package.json / tsconfig JSON syntax validation
+- SVG parse validation
+- no pnpm-workspace.yaml present
+- source grep: no example.com, localhost, chrome-extension://
+- domain is configured only via astro.config.mjs `site`
+
+Blocked by execution environment:
+- outbound DNS/network access to registry.npmjs.org and upload.wikimedia.org is unavailable
+- therefore pnpm could not be bootstrapped and dependencies could not be installed
+- pnpm-lock.yaml could not be generated reliably
+- pnpm check / pnpm build could not be executed
+- real photos could not be downloaded into the ZIP; the page currently uses the verified Wikimedia Commons originals by URL
+
+Do not treat this package as having passed the requested clean-environment install/check/build until those commands succeed in a networked environment and a matching pnpm-lock.yaml is committed.
