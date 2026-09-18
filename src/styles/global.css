@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #111719;
+  --cream: #f4f0e6;
+  --signal: #ef3f2f;
+  --jade: #7aa79a;
+  --steel: #c8d0cf;
+}
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--cream); color: var(--ink); font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif; }
+::selection { background: var(--signal); color: white; }
+.grain { background-image: radial-gradient(rgba(17,23,25,.08) .7px, transparent .7px); background-size: 9px 9px; }
+.rail { position: relative; }
+.rail::before { content: ""; position: absolute; left: 1rem; top: 0; bottom: 0; width: 3px; background: linear-gradient(var(--signal), var(--steel), var(--signal)); }
+.step-card { border-left: 5px solid var(--signal); box-shadow: 0 14px 35px rgba(17,23,25,.08); }
+.ticket-notch { clip-path: polygon(0 0, 100% 0, 100% calc(50% - 10px), calc(100% - 10px) 50%, 100% calc(50% + 10px), 100% 100%, 0 100%, 0 calc(50% + 10px), 10px 50%, 0 calc(50% - 10px)); }

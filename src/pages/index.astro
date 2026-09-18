@@ -1,0 +1,192 @@
+---
+import '../styles/global.css';
+
+export const prerender = true;
+
+const base = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const canonical = base ? `${base}/` : undefined;
+const ogImage = base ? `${base}/images/og-placeholder.svg` : undefined;
+
+const facts = [
+  { label: '全長', value: '逾 800 米' },
+  { label: '系統', value: '16 條扶梯 · 3 條行人道' },
+  { label: '上午方向', value: '06:00–10:00 下行' },
+  { label: '其後方向', value: '10:00–午夜 上行' },
+];
+const faqs = [
+  { q: '中環至半山自動扶手電梯需要門票嗎？', a: '不需要。這是公共行人交通設施，可免費使用。' },
+  { q: '扶手電梯可以直接到太平山頂嗎？', a: '不可以。系統終點在干德道，並非山頂。前往太平山頂需另乘山頂纜車、巴士或其他交通工具。' },
+  { q: '甚麼時間最適合遊覽？', a: '想順勢向上逛中環及半山，可在上午 10 時後前往；黃昏至入夜則適合感受街區燈光與餐飲氛圍。' },
+  { q: '雨天可以去嗎？', a: '大部分通道有上蓋，雨天仍可使用；但各出入口、橫街及步行接駁位置仍可能濕滑，建議穿防滑鞋。' },
+  { q: '建議預留多少時間？', a: '單純體驗扶梯可預留約 30–45 分鐘；若沿途停留中環街市、大館、荷李活道一帶，建議預留 1–2 小時。' },
+];
+
+const attractionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristAttraction',
+  name: '中環至半山自動扶手電梯',
+  alternateName: 'Central–Mid-Levels Escalator and Walkway System',
+  description: '連接香港中環皇后大道中與半山干德道的有蓋自動扶手電梯及行人道系統。',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '皇后大道中至干德道',
+    addressLocality: '中環',
+    addressRegion: '香港島',
+    addressCountry: 'HK',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: 22.2838464, longitude: 114.1549689 },
+  isAccessibleForFree: true,
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '06:00', closes: '24:00' }
+  ],
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.1', reviewCount: '10463', bestRating: '5' },
+  ...(canonical ? { url: canonical } : {}),
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })),
+};
+---
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>中環至半山自動扶手電梯｜中環步行遊覽指南</title>
+  <meta name="description" content="中環至半山自動扶手電梯實用指南：方向時段、交通、費用、停留時間、周邊美食、景點及地圖。" />
+  {canonical && <link rel="canonical" href={canonical} />}
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+  <meta property="og:title" content="中環至半山自動扶手電梯｜中環步行遊覽指南" />
+  <meta property="og:description" content="由皇后大道中一路向半山，沿著香港最具城市節奏感的扶梯系統，邊走邊看老街、美食與歷史建築。" />
+  <meta property="og:type" content="website" />
+  {canonical && <meta property="og:url" content={canonical} />}
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="theme-color" content="#111719" />
+  <script type="application/ld+json" set:html={JSON.stringify(attractionSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+</head>
+<body class="grain">
+  <header class="sticky top-0 z-50 border-b border-black/10 bg-[#f4f0e6]/95 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+      <a href="#top" aria-label="返回頁首"><img src="/logo.svg" alt="中環至半山標誌" class="h-12 w-auto" /></a>
+      <nav class="hidden gap-5 text-sm font-semibold md:flex" aria-label="主選單">
+        <a href="#guide" class="hover:text-[#ef3f2f]">遊覽攻略</a><a href="#transport" class="hover:text-[#ef3f2f]">交通</a><a href="#food" class="hover:text-[#ef3f2f]">美食</a><a href="#nearby" class="hover:text-[#ef3f2f]">周邊</a><a href="#faq" class="hover:text-[#ef3f2f]">FAQ</a>
+      </nav>
+      <a href="https://maps.app.goo.gl/kYnouGXP34XBKHnp8" rel="noopener" target="_blank" class="rounded-full bg-[#111719] px-4 py-2 text-sm font-bold text-white">開啟地圖</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="relative isolate min-h-[78vh] overflow-hidden bg-[#111719] text-white">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Central-Mid-Levels_escalators_2023-10-18.jpg" alt="中環至半山自動扶手電梯實景" class="absolute inset-0 h-full w-full object-cover opacity-55" />
+      <div class="absolute inset-0 bg-[linear-gradient(100deg,rgba(17,23,25,.96)_10%,rgba(17,23,25,.45)_55%,rgba(17,23,25,.75)_100%)]"></div>
+      <div class="relative mx-auto flex min-h-[78vh] max-w-6xl items-end px-5 py-16 md:py-20">
+        <div class="max-w-3xl">
+          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/25 px-4 py-2 text-sm"><span class="h-2 w-2 rounded-full bg-[#ef3f2f]"></span> 香港島 · 中環至半山</div>
+          <p class="mb-3 font-mono text-sm uppercase tracking-[.3em] text-[#c8d0cf]">Central → Mid-Levels</p>
+          <h1 class="text-5xl font-black leading-[1.02] tracking-tight md:text-7xl">沿城市斜坡<br/><span class="text-[#ef3f2f]">一路向上。</span></h1>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-white/85">它不是一段普通的扶手電梯，而是一條穿過中環街巷、餐桌、舊建築與半山日常的城市切面。由皇后大道中出發，走走停停，才是最香港的玩法。</p>
+          <div class="mt-8 flex flex-wrap gap-3"><a href="#guide" class="rounded-full bg-[#ef3f2f] px-6 py-3 font-bold">開始遊覽</a><a href="#map" class="rounded-full border border-white/50 px-6 py-3 font-bold">看地圖</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-b border-black/10 bg-white/70">
+      <div class="mx-auto grid max-w-6xl grid-cols-2 md:grid-cols-4">
+        {facts.map((f) => <div class="border-r border-black/10 p-5 last:border-r-0"><p class="text-xs font-bold uppercase tracking-widest text-black/50">{f.label}</p><p class="mt-1 text-lg font-black">{f.value}</p></div>)}
+      </div>
+    </section>
+
+    <section id="guide" class="mx-auto max-w-6xl px-5 py-20">
+      <div class="grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
+        <div class="lg:sticky lg:top-24">
+          <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">THE URBAN RIDE</p>
+          <h2 class="mt-3 text-4xl font-black md:text-5xl">先看方向，<br/>再決定怎樣走。</h2>
+          <p class="mt-5 leading-8 text-black/65">系統由有蓋行人道、16 條可轉換方向的單向扶手電梯及 3 條可轉換方向的單向自動行人道組成。早上主要服務下山通勤，其後轉為上行，遊客通常會在上午較後時間開始向半山探索。</p>
+        </div>
+        <div class="rail space-y-6 pl-10">
+          <article class="step-card bg-white p-6"><p class="text-xs font-bold text-[#ef3f2f]">01 / 起點</p><h3 class="mt-2 text-2xl font-black">皇后大道中 × 中環街市</h3><p class="mt-3 leading-7 text-black/65">由中環街市一帶接入行人天橋及扶梯系統，先感受中環最密集的商業街景，再逐步向山坡移動。</p></article>
+          <article class="step-card bg-white p-6"><p class="text-xs font-bold text-[#ef3f2f]">02 / 荷李活道一帶</p><h3 class="mt-2 text-2xl font-black">藝術、老街與大館</h3><p class="mt-3 leading-7 text-black/65">這一段最適合「跳上跳落」：可轉往荷李活道、奧卑利街及大館，街頭壁畫、舊式街巷與歷史建築集中。</p></article>
+          <article class="step-card bg-white p-6"><p class="text-xs font-bold text-[#ef3f2f]">03 / 蘇豪區</p><h3 class="mt-2 text-2xl font-black">餐廳、酒吧與坡道日常</h3><p class="mt-3 leading-7 text-black/65">士丹頓街、伊利近街一帶餐飲密集，扶梯像一條懸在街上的移動觀景台，適合慢慢看城市細節。</p></article>
+          <article class="step-card bg-white p-6"><p class="text-xs font-bold text-[#ef3f2f]">04 / 半山</p><h3 class="mt-2 text-2xl font-black">終點是干德道，不是山頂</h3><p class="mt-3 leading-7 text-black/65">抵達較高位置後可沿半山街道散步或折返。若目標是太平山頂，需另安排山頂纜車、巴士或其他交通。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-[#111719] py-20 text-white">
+      <div class="mx-auto grid max-w-6xl gap-8 px-5 md:grid-cols-2 md:items-center">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Inside_the_Central-Mid-Levels_escalators.jpg" alt="中環至半山扶手電梯內部實景" class="h-[520px] w-full rounded-[2rem] object-cover" loading="lazy" />
+        <div>
+          <p class="font-mono text-xs tracking-[.25em] text-[#7aa79a]">WHEN TO GO</p><h2 class="mt-3 text-4xl font-black">最佳遊覽時段</h2>
+          <div class="mt-8 space-y-5"><div class="border-l-4 border-[#ef3f2f] pl-5"><h3 class="text-xl font-bold">上午 10 時後</h3><p class="mt-2 text-white/70">想順著扶梯往半山走，這段時間最直觀；避開早晨下行通勤方向。</p></div><div class="border-l-4 border-[#7aa79a] pl-5"><h3 class="text-xl font-bold">黃昏至晚上</h3><p class="mt-2 text-white/70">街區燈光亮起，蘇豪餐飲氣氛最有層次，也適合把行程接到晚餐。</p></div><div class="border-l-4 border-white/35 pl-5"><h3 class="text-xl font-bold">建議停留 45–90 分鐘</h3><p class="mt-2 text-white/70">若加上大館、中環街市或荷李活道，可延長至 2 小時以上。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="transport" class="mx-auto max-w-6xl px-5 py-20">
+      <div class="mb-10 max-w-3xl"><p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">GETTING THERE</p><h2 class="mt-3 text-4xl font-black">詳細交通</h2></div>
+      <div class="grid gap-5 md:grid-cols-3">
+        <article class="rounded-3xl bg-white p-6 shadow-sm"><span class="text-3xl">🚇</span><h3 class="mt-4 text-xl font-black">港鐵</h3><p class="mt-3 leading-7 text-black/65">由中環站步行往皇后大道中／中環街市方向接入最方便。若從上環一帶出發，也可沿皇后大道中步行至系統下段。</p></article>
+        <article class="rounded-3xl bg-white p-6 shadow-sm"><span class="text-3xl">🚋</span><h3 class="mt-4 text-xl font-black">電車／巴士</h3><p class="mt-3 leading-7 text-black/65">德輔道中、皇后大道中沿線公共交通密集；下車後以中環街市或皇后大道中作為步行定位最容易。</p></article>
+        <article class="rounded-3xl bg-white p-6 shadow-sm"><span class="text-3xl">🚶</span><h3 class="mt-4 text-xl font-black">步行串連</h3><p class="mt-3 leading-7 text-black/65">可與中環街市、大館、荷李活道、PMQ 等串成一條城市步行線；官方亦建議使用「香港出行易」規劃實時路線。</p></article>
+      </div>
+    </section>
+
+    <section class="border-y border-black/10 bg-[#dde5e1] py-16">
+      <div class="mx-auto grid max-w-6xl gap-6 px-5 md:grid-cols-3">
+        <article class="ticket-notch bg-[#f4f0e6] p-7"><p class="text-xs font-bold tracking-widest text-black/50">門票 / 費用</p><p class="mt-3 text-4xl font-black">免費</p><p class="mt-3 text-sm leading-6 text-black/60">公共行人交通設施，不設景點門票。</p></article>
+        <article class="ticket-notch bg-[#f4f0e6] p-7"><p class="text-xs font-bold tracking-widest text-black/50">停車資訊</p><p class="mt-3 text-2xl font-black">不建議自駕</p><p class="mt-3 text-sm leading-6 text-black/60">扶梯本身沒有專用停車場。中環車位緊張、費用浮動大，優先使用港鐵或公共交通。</p></article>
+        <article class="ticket-notch bg-[#f4f0e6] p-7"><p class="text-xs font-bold tracking-widest text-black/50">無障礙提示</p><p class="mt-3 text-2xl font-black">分段評估</p><p class="mt-3 text-sm leading-6 text-black/60">部分路段涉及扶手電梯、樓梯及坡道；輪椅或嬰兒車使用者宜預先以無障礙路線規劃替代接駁。</p></article>
+      </div>
+    </section>
+
+    <section id="food" class="mx-auto max-w-6xl px-5 py-20">
+      <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">EAT ALONG THE WAY</p><h2 class="mt-3 text-4xl font-black">周邊美食</h2>
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <article class="rounded-3xl border border-black/10 bg-white p-6"><p class="text-xs font-bold text-[#ef3f2f]">雲吞麵</p><h3 class="mt-2 text-2xl font-black">麥奀雲吞麵世家</h3><p class="mt-3 leading-7 text-black/65">威靈頓街的經典港式雲吞麵選擇，適合快速吃一碗再上路。</p></article>
+        <article class="rounded-3xl border border-black/10 bg-white p-6"><p class="text-xs font-bold text-[#ef3f2f]">燒味</p><h3 class="mt-2 text-2xl font-black">一樂燒鵝</h3><p class="mt-3 leading-7 text-black/65">士丹利街的老牌燒味店，以燒鵝最具代表性；用餐時段通常較繁忙。</p></article>
+        <article class="rounded-3xl border border-black/10 bg-white p-6"><p class="text-xs font-bold text-[#ef3f2f]">多選擇</p><h3 class="mt-2 text-2xl font-black">中環街市餐飲</h3><p class="mt-3 leading-7 text-black/65">想要冷氣、座位和多種餐飲選擇，可在起點附近的中環街市先補給。</p></article>
+      </div>
+    </section>
+
+    <section id="nearby" class="bg-white/70 py-20">
+      <div class="mx-auto max-w-6xl px-5"><p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">NEARBY</p><h2 class="mt-3 text-4xl font-black">周邊景點</h2>
+        <div class="mt-8 grid gap-5 md:grid-cols-3"><article class="rounded-3xl bg-[#111719] p-6 text-white"><p class="text-xs font-bold text-[#7aa79a]">歷史 × 藝術</p><h3 class="mt-2 text-2xl font-black">大館</h3><p class="mt-3 leading-7 text-white/65">由前中區警署建築群活化而成，歷史展覽、當代藝術及公共空間集中。</p></article><article class="rounded-3xl bg-[#111719] p-6 text-white"><p class="text-xs font-bold text-[#7aa79a]">保育活化</p><h3 class="mt-2 text-2xl font-black">中環街市</h3><p class="mt-3 leading-7 text-white/65">扶梯下段的重要入口節點，保留歷史建築特色並加入零售、餐飲與公共空間。</p></article><article class="rounded-3xl bg-[#111719] p-6 text-white"><p class="text-xs font-bold text-[#7aa79a]">傳統文化</p><h3 class="mt-2 text-2xl font-black">文武廟</h3><p class="mt-3 leading-7 text-white/65">沿荷李活道往上環方向可到，適合與中環老城街區一起安排。</p></article></div>
+      </div>
+    </section>
+
+    <section id="map" class="mx-auto max-w-6xl px-5 py-20">
+      <div class="mb-8"><p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">MAP</p><h2 class="mt-3 text-4xl font-black">位置與路線</h2></div>
+      <div class="overflow-hidden rounded-[2rem] border border-black/10 bg-white p-2 shadow-xl"><iframe title="中環至半山自動扶手電梯 Google 地圖" src="https://www.google.com/maps?q=22.2838464,114.1549689&z=16&output=embed&hl=zh-HK" width="100%" height="520" style="border:0;border-radius:1.5rem" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    </section>
+
+    <section id="faq" class="mx-auto max-w-4xl px-5 py-20"><p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">FAQ</p><h2 class="mt-3 text-4xl font-black">常見問答</h2><div class="mt-8 divide-y divide-black/10 border-y border-black/10">{faqs.map((item) => <details class="group py-5"><summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-bold"><span>{item.q}</span><span class="text-[#ef3f2f] transition group-open:rotate-45">＋</span></summary><p class="max-w-3xl pt-4 leading-7 text-black/65">{item.a}</p></details>)}</div></section>
+
+    <section class="mx-auto max-w-6xl px-5 pb-20"><div class="rounded-[2rem] bg-[#ef3f2f] p-8 text-white md:p-12"><h2 class="text-3xl font-black">一條扶梯，看見幾個中環。</h2><p class="mt-4 max-w-2xl leading-7 text-white/85">官方資料顯示，這套系統連接皇后大道中與干德道，是香港中區重要的山坡行人通道。出發前如遇維修、惡劣天氣或特別安排，請以運輸署及現場公告為準。</p><div class="mt-6 flex flex-wrap gap-3"><a class="rounded-full bg-[#111719] px-5 py-3 font-bold" target="_blank" rel="noopener" href="https://www.td.gov.hk/tc/transport_in_hong_kong/pedestrians/hillside_escalator/index.html">運輸署資料</a><a class="rounded-full border border-white/50 px-5 py-3 font-bold" target="_blank" rel="noopener" href="https://maps.app.goo.gl/kYnouGXP34XBKHnp8">Google 地圖</a></div></div></section>
+  </main>
+
+  <footer class="border-t border-black/10 bg-[#111719] text-white"><div class="mx-auto max-w-6xl px-5 py-10"><div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"><div><img src="/logo.svg" alt="中環至半山標誌" class="h-12 w-auto"/><p class="mt-4 max-w-xl text-sm leading-6 text-white/55">非官方旅遊資訊網站，與香港特別行政區政府、運輸署、Google 或景點管理單位沒有隸屬或授權關係；資訊請以官方最新公布為準。</p></div><div class="flex flex-wrap gap-4 text-sm text-white/70"><button id="cookie-settings" type="button">Cookie 設定</button><a href="#privacy">私隱說明</a><a href="#terms">使用條款</a></div></div><div id="privacy" class="mt-8 border-t border-white/10 pt-6 text-xs leading-6 text-white/45">私隱說明：本站不設帳戶或資料庫。若你同意分析 Cookie，Google Analytics 4 會收集匿名化的使用統計；你可隨時透過 Cookie 設定更改選擇。</div><div id="terms" class="mt-4 text-xs leading-6 text-white/45">使用條款：內容只供旅遊規劃參考，交通、開放安排、商戶營業及費用可能變動，出發前請向相關官方或營運方核實。</div><div class="mt-5 text-[11px] leading-5 text-white/35">相片：Z thomas / Wikimedia Commons（CC BY-SA 4.0）；Mx. Granger / Wikimedia Commons（CC0 1.0）。</div></div></footer>
+
+  <div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-[60] mx-auto hidden max-w-xl rounded-3xl border border-black/10 bg-white p-5 shadow-2xl"><p class="font-bold">Cookie 設定</p><p class="mt-2 text-sm leading-6 text-black/60">本站只在你同意後載入 Google Analytics 4（G-HXM22WWPKP）。必要功能不使用追蹤 Cookie。</p><div class="mt-4 flex gap-3"><button id="accept-analytics" class="rounded-full bg-[#111719] px-4 py-2 text-sm font-bold text-white">同意分析</button><button id="reject-analytics" class="rounded-full border border-black/20 px-4 py-2 text-sm font-bold">只用必要功能</button></div></div>
+
+  <script is:inline>
+    (() => {
+      const KEY = 'cmle-cookie-choice';
+      const banner = document.getElementById('cookie-banner');
+      const loadGA = () => {
+        if (document.querySelector('script[data-ga4]')) return;
+        const s = document.createElement('script'); s.async = true; s.dataset.ga4 = 'true'; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP'; document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments)}; window.gtag = gtag; gtag('js', new Date()); gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
+      };
+      const saved = localStorage.getItem(KEY); if (!saved) banner?.classList.remove('hidden'); if (saved === 'yes') loadGA();
+      document.getElementById('accept-analytics')?.addEventListener('click', () => { localStorage.setItem(KEY,'yes'); loadGA(); banner?.classList.add('hidden'); });
+      document.getElementById('reject-analytics')?.addEventListener('click', () => { localStorage.setItem(KEY,'no'); banner?.classList.add('hidden'); });
+      document.getElementById('cookie-settings')?.addEventListener('click', () => banner?.classList.remove('hidden'));
+    })();
+  </script>
+</body>
+</html>
