@@ -1,0 +1,113 @@
+---
+import { localizedPath, ui } from '../i18n';
+import type { Locale } from '../i18n';
+import { topics } from '../content/topics';
+import type { TopicSlug } from '../content/topics';
+
+export interface Props {
+  locale: Locale;
+  slug: TopicSlug;
+  updated: string;
+}
+
+const { locale, slug, updated } = Astro.props;
+const entry = topics[slug];
+const c = entry.content[locale];
+const t = ui[locale];
+const homeHref = localizedPath(locale, '');
+---
+
+<article class="mx-auto max-w-4xl px-5 py-16">
+  <nav aria-label="breadcrumb" class="text-sm text-black/50">
+    <a href={homeHref} class="hover:text-[#ef3f2f]">{t.home}</a>
+    <span class="px-2">/</span>
+    <span>{entry.navLabel[locale]}</span>
+  </nav>
+
+  <h1 class="mt-6 text-4xl font-black leading-tight md:text-5xl">{c.h1}</h1>
+  <p class="mt-6 text-lg leading-8 text-black/70">{c.lead}</p>
+  <p class="mt-3 text-xs text-black/45">{t.updated}：{updated}</p>
+
+  {
+    c.blocks.map((block) => (
+      <section class="mt-14">
+        <h2 class="text-3xl font-black">{block.heading}</h2>
+        {block.paragraphs?.map((p) => <p class="mt-4 leading-8 text-black/70">{p}</p>)}
+        {block.bullets && (
+          <ul class="mt-6 space-y-5">
+            {block.bullets.map((item) => (
+              <li class="border-l-4 border-[#ef3f2f] pl-5">
+                <p class="text-lg font-bold">{item.title}</p>
+                <p class="mt-1 leading-7 text-black/65">{item.text}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+        {block.table && (
+          <div class="mt-6 overflow-x-auto rounded-2xl border border-black/10 bg-white">
+            <table class="w-full border-collapse text-left text-sm">
+              <caption class="block px-4 pt-4 text-left text-xs text-black/50">{block.table.caption}</caption>
+              <thead class="bg-[#f4f0e6]">
+                <tr>
+                  {block.table.columns.map((col) => (
+                    <th scope="col" class="px-4 py-3 font-bold">{col}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {block.table.rows.map((row) => (
+                  <tr class="border-t border-black/10 align-top">
+                    {row.map((cell) => (
+                      <td class="px-4 py-3 leading-6 text-black/70">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    ))
+  }
+
+  <section id="faq" class="mt-16">
+    <h2 class="text-3xl font-black">{t.faqTitle}</h2>
+    <div class="mt-6 divide-y divide-black/10 border-y border-black/10">
+      {
+        c.faqs.map((item) => (
+          <details class="group py-5">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-bold">
+              <span>{item.q}</span>
+              <span class="text-[#ef3f2f] transition group-open:rotate-45">＋</span>
+            </summary>
+            <p class="max-w-3xl pt-4 leading-7 text-black/65">{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-16 rounded-3xl bg-[#f4f0e6] p-7">
+    <h2 class="text-2xl font-black">{t.relatedTitle}</h2>
+    <p class="mt-2 text-sm leading-6 text-black/60">{t.relatedLead}</p>
+    <ul class="mt-4 space-y-2">
+      {
+        c.related.map((item) => (
+          <li>
+            <a class="font-bold text-[#ef3f2f] underline decoration-2" href={localizedPath(locale, topics[item.slug].path)}>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a class="font-bold text-[#ef3f2f] underline decoration-2" href={homeHref}>{t.backToGuide}</a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="mt-12 border-t border-black/10 pt-6 text-xs leading-6 text-black/50">
+    <p class="font-bold">{t.sourcesTitle}</p>
+    <p class="mt-2">{t.sourcesLead}</p>
+  </section>
+</article>

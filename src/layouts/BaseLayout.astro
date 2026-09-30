@@ -1,0 +1,192 @@
+---
+import '../styles/global.css';
+import { ATTRACTION, SITE_URL, siteName } from '../data/site';
+import { hreflangAlternates, localeMeta, localizedPath, navItems, pick, switchHref, ui } from '../i18n';
+import type { Locale, PathKey } from '../i18n';
+import { topics, topicSlugs } from '../content/topics';
+
+export interface Props {
+  locale: Locale;
+  path?: PathKey;
+  title: string;
+  description: string;
+  jsonLd?: Record<string, unknown>[];
+  ogImage?: string;
+}
+
+const { locale, path = '', title, description, jsonLd = [], ogImage = ATTRACTION.image } = Astro.props;
+
+const canonical = `${SITE_URL}${localizedPath(locale, path)}`;
+const alternates = hreflangAlternates(path);
+const ogImageAbs = ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`;
+const t = ui[locale];
+const homeHref = localizedPath(locale, '');
+const langHref = switchHref(locale, path);
+const langLabel = pick(locale, 'EN', '中');
+const nav = navItems(locale);
+const meta = localeMeta[locale];
+---
+
+<!doctype html>
+<html lang={meta.htmlLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.lang} href={alt.href} />)}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName(locale)} />
+    <meta property="og:locale" content={meta.ogLocale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta property="og:image:alt" content={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbs} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="theme-color" content="#111719" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+    {jsonLd.map((schema) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+
+  <body class="grain">
+    <a href="#main" class="sr-focus">{t.skipNav}</a>
+
+    <header class="sticky top-0 z-50 border-b border-black/10 bg-[#f4f0e6]/95 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+        <a href={homeHref} aria-label={pick(locale, '返回首頁', 'Back to home')}>
+          <img src="/logo.svg" alt={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} class="h-12 w-auto" />
+        </a>
+        <nav class="hidden gap-5 text-sm font-semibold md:flex" aria-label={pick(locale, '主選單', 'Main menu')}>
+          {
+            nav.map((item) => (
+              <a href={item.href} class="hover:text-[#ef3f2f]">
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="flex items-center gap-3">
+          <a href={langHref} class="text-sm font-bold underline decoration-dotted" aria-label={t.languageLabel}>{langLabel}</a>
+          <a href={ATTRACTION.mapsUrl} rel="noopener" target="_blank" class="rounded-full bg-[#111719] px-4 py-2 text-sm font-bold text-white">{t.openMap}</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="border-t border-black/10 bg-[#111719] text-white">
+      <div class="mx-auto max-w-6xl px-5 py-10">
+        <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+          <div class="max-w-xl">
+            <img src="/logo.svg" alt={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} class="h-12 w-auto" />
+            <p class="mt-4 text-sm leading-6 text-white/55">{t.disclaimer}</p>
+          </div>
+          <nav aria-label={t.explore} class="min-w-[200px]">
+            <p class="text-sm font-bold text-white/80">{t.explore}</p>
+            <ul class="mt-3 space-y-2 text-sm text-white/70">
+              <li><a href={homeHref} class="hover:text-white">{pick(locale, '扶手電梯完整指南', 'Full escalator guide')}</a></li>
+              {
+                topicSlugs.map((slug) => (
+                  <li>
+                    <a href={localizedPath(locale, topics[slug].path)} class="hover:text-white">
+                      {topics[slug].navLabel[locale]}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
+          <div>
+            <p class="text-sm font-bold text-white/80">{t.officialSource}</p>
+            <ul class="mt-3 space-y-2 text-sm text-white/70">
+              <li>
+                <a href={locale === 'en' ? ATTRACTION.govTransportUrlEn : ATTRACTION.govTransportUrl} rel="noopener nofollow" target="_blank" class="hover:text-white">
+                  {pick(locale, '運輸署 · 上山扶梯系統', 'Transport Department · Hillside escalators')}
+                </a>
+              </li>
+              <li>
+                <a href={locale === 'en' ? ATTRACTION.wikipediaUrl : ATTRACTION.wikipediaUrlZh} rel="noopener nofollow" target="_blank" class="hover:text-white">
+                  Wikipedia
+                </a>
+              </li>
+              <li>
+                <a href={ATTRACTION.mapsUrl} rel="noopener" target="_blank" class="hover:text-white">
+                  Google Maps
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-4 border-t border-white/10 pt-6 text-sm text-white/70">
+          <button id="cookie-settings" type="button">{t.cookieSettings}</button>
+          <a href={`${homeHref}#privacy`}>{t.privacyTitle}</a>
+          <a href={`${homeHref}#terms`}>{t.termsTitle}</a>
+        </div>
+        <div id="privacy" class="mt-6 text-xs leading-6 text-white/45">{t.privacyTitle}：{t.privacyBody}</div>
+        <div id="terms" class="mt-4 text-xs leading-6 text-white/45">{t.termsTitle}：{t.termsBody}</div>
+        <div class="mt-5 text-[11px] leading-5 text-white/35">{t.photoCredit}</div>
+      </div>
+    </footer>
+
+    <div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-[60] mx-auto hidden max-w-xl rounded-3xl border border-black/10 bg-white p-5 shadow-2xl">
+      <p class="font-bold">{t.cookieTitle}</p>
+      <p class="mt-2 text-sm leading-6 text-black/60">{t.cookieBody}</p>
+      <div class="mt-4 flex gap-3">
+        <button id="accept-analytics" class="rounded-full bg-[#111719] px-4 py-2 text-sm font-bold text-white">{t.cookieAccept}</button>
+        <button id="reject-analytics" class="rounded-full border border-black/20 px-4 py-2 text-sm font-bold">{t.cookieReject}</button>
+      </div>
+    </div>
+
+    <script is:inline>
+      (() => {
+        const KEY = 'cmle-cookie-choice';
+        const banner = document.getElementById('cookie-banner');
+        const loadGA = () => {
+          if (document.querySelector('script[data-ga4]')) return;
+          const s = document.createElement('script');
+          s.async = true;
+          s.dataset.ga4 = 'true';
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
+        };
+        const saved = localStorage.getItem(KEY);
+        if (!saved) banner?.classList.remove('hidden');
+        if (saved === 'yes') loadGA();
+        document.getElementById('accept-analytics')?.addEventListener('click', () => {
+          localStorage.setItem(KEY, 'yes');
+          loadGA();
+          banner?.classList.add('hidden');
+        });
+        document.getElementById('reject-analytics')?.addEventListener('click', () => {
+          localStorage.setItem(KEY, 'no');
+          banner?.classList.add('hidden');
+        });
+        document.getElementById('cookie-settings')?.addEventListener('click', () => banner?.classList.remove('hidden'));
+      })();
+    </script>
+  </body>
+</html>

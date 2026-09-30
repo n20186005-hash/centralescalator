@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-static
+.astro
+.wrangler
+.open-next
+.dev.vars
+.env
+*.log
+.DS_Store

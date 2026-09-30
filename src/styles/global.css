@@ -15,3 +15,7 @@ body { margin: 0; background: var(--cream); color: var(--ink); font-family: "Pin
 .rail::before { content: ""; position: absolute; left: 1rem; top: 0; bottom: 0; width: 3px; background: linear-gradient(var(--signal), var(--steel), var(--signal)); }
 .step-card { border-left: 5px solid var(--signal); box-shadow: 0 14px 35px rgba(17,23,25,.08); }
 .ticket-notch { clip-path: polygon(0 0, 100% 0, 100% calc(50% - 10px), calc(100% - 10px) 50%, 100% calc(50% + 10px), 100% 100%, 0 100%, 0 calc(50% + 10px), 10px 50%, 0 calc(50% - 10px)); }
+.sr-focus { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sr-focus:focus { position: fixed; left: 1rem; top: 1rem; z-index: 100; width: auto; height: auto; clip: auto; overflow: visible; padding: .75rem 1.25rem; border-radius: 9999px; background: #ffffff; color: var(--ink); font-weight: 700; box-shadow: 0 10px 30px rgba(17,23,25,.25); }
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }

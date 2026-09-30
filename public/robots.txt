@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://centralescalator.com/sitemap-index.xml

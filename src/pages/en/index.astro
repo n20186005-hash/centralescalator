@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HomeBlocks from '../../components/HomeBlocks.astro';
+import { home } from '../../content/home';
+import { attractionSchema, faqSchema, organizationSchema, websiteSchema } from '../../lib/schema';
+import { SITE_URL } from '../../data/site';
+
+export const prerender = true;
+
+const locale = 'en' as const;
+const c = home[locale];
+const canonical = `${SITE_URL}/en/`;
+const jsonLd = [
+  websiteSchema(locale),
+  organizationSchema(),
+  attractionSchema(locale, canonical, `${SITE_URL}/images/og-cover.jpg`),
+  faqSchema(c.faqs),
+];
+---
+
+<BaseLayout locale={locale} path="" title={c.meta.title} description={c.meta.description} jsonLd={jsonLd}>
+  <HomeBlocks locale={locale} />
+</BaseLayout>

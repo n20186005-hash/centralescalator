@@ -1,0 +1,256 @@
+---
+import { ATTRACTION } from '../data/site';
+import { home } from '../content/home';
+import { localizedPath, ui, pick } from '../i18n';
+import type { Locale } from '../i18n';
+
+export interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const c = home[locale];
+const t = ui[locale];
+const scheduleHref = localizedPath(locale, 'schedule/');
+const directionsHref = localizedPath(locale, 'directions/');
+const foodHref = localizedPath(locale, 'food/');
+const attractionsHref = localizedPath(locale, 'attractions/');
+const ratingLine = pick(
+  locale,
+  `Google Maps 評分 ${ATTRACTION.aggregateRating.ratingValue} / ${ATTRACTION.aggregateRating.reviewCount.toLocaleString('en-US')} 則評論`,
+  `Rated ${ATTRACTION.aggregateRating.ratingValue} on Google Maps from ${ATTRACTION.aggregateRating.reviewCount.toLocaleString('en-US')} reviews`,
+);
+---
+
+<section class="relative isolate min-h-[78vh] overflow-hidden bg-[#111719] text-white">
+  <img
+    src={ATTRACTION.hero}
+    alt={pick(locale, '中環至半山自動扶手電梯實景', 'The Central-Mid-Levels Escalators in Central, Hong Kong')}
+    class="absolute inset-0 h-full w-full object-cover opacity-55"
+    width="1600"
+    height="1067"
+    decoding="async"
+  />
+  <div class="absolute inset-0 bg-[linear-gradient(100deg,rgba(17,23,25,.96)_10%,rgba(17,23,25,.45)_55%,rgba(17,23,25,.75)_100%)]"></div>
+  <div class="relative mx-auto flex min-h-[78vh] max-w-6xl items-end px-5 py-16 md:py-20">
+    <div class="max-w-3xl">
+      <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/30 bg-black/25 px-4 py-2 text-sm">
+        <span class="h-2 w-2 rounded-full bg-[#ef3f2f]"></span> {c.hero.badge}
+      </div>
+      <p class="mb-3 font-mono text-sm uppercase tracking-[.3em] text-[#c8d0cf]">{c.hero.eyebrow}</p>
+      <h1 class="text-5xl font-black leading-[1.02] tracking-tight md:text-7xl">
+        {c.hero.titleTop}<br/><span class="text-[#ef3f2f]">{c.hero.titleAccent}</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-white/85">{c.hero.lead}</p>
+      <p class="mt-3 text-sm text-white/60">{ratingLine} · {pick(locale, '免費乘搭', 'Free to ride')}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={scheduleHref} class="rounded-full bg-[#ef3f2f] px-6 py-3 font-bold">{c.hero.ctaPrimary}</a>
+        <a href="#map" class="rounded-full border border-white/50 px-6 py-3 font-bold">{c.hero.ctaSecondary}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-b border-black/10 bg-white/70">
+  <div class="mx-auto grid max-w-6xl grid-cols-2 md:grid-cols-4">
+    {
+      c.facts.map((f) => (
+        <div class="border-r border-black/10 p-5 last:border-r-0">
+          <p class="text-xs font-bold uppercase tracking-widest text-black/50">{f.label}</p>
+          <p class="mt-1 text-lg font-black">{f.value}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<section id="guide" class="mx-auto max-w-6xl px-5 py-20">
+  <div class="grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
+    <div class="lg:sticky lg:top-24">
+      <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">{c.guide.kicker}</p>
+      <h2 class="mt-3 text-4xl font-black md:text-5xl">{c.guide.title}</h2>
+      <p class="mt-5 leading-8 text-black/65">{c.guide.intro}</p>
+      <p class="mt-6">
+        <a class="font-bold text-[#ef3f2f] underline decoration-2" href={scheduleHref}>
+          {pick(locale, '查看完整運作時間與乘搭攻略 →', 'See full operating hours and how to ride →')}
+        </a>
+      </p>
+    </div>
+    <ol class="rail space-y-6 pl-10">
+      {
+        c.guide.steps.map((step) => (
+          <li class="step-card bg-white p-6">
+            <p class="text-xs font-bold text-[#ef3f2f]">{step.tag}</p>
+            <h3 class="mt-2 text-2xl font-black">{step.title}</h3>
+            <p class="mt-3 leading-7 text-black/65">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="bg-[#111719] py-20 text-white">
+  <div class="mx-auto grid max-w-6xl gap-8 px-5 md:grid-cols-2 md:items-center">
+    <img
+      src="/images/escalator-interior.jpg"
+      alt={pick(locale, '扶手電梯內部實景', 'Inside the covered escalator system')}
+      class="h-[520px] w-full rounded-[2rem] object-cover"
+      loading="lazy"
+      width="1280"
+      height="960"
+    />
+    <div>
+      <p class="font-mono text-xs tracking-[.25em] text-[#7aa79a]">{c.timing.kicker}</p>
+      <h2 class="mt-3 text-4xl font-black">{c.timing.title}</h2>
+      <div class="mt-8 space-y-5">
+        {
+          c.timing.items.map((item, index) => (
+            <div class={`border-l-4 pl-5 ${index === 0 ? 'border-[#ef3f2f]' : index === 1 ? 'border-[#7aa79a]' : 'border-white/35'}`}>
+              <h3 class="text-xl font-bold">{item.title}</h3>
+              <p class="mt-2 text-white/70">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="transport" class="mx-auto max-w-6xl px-5 py-20">
+  <div class="mb-10 max-w-3xl">
+    <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">{c.transport.kicker}</p>
+    <h2 class="mt-3 text-4xl font-black">{c.transport.title}</h2>
+    <p class="mt-4 leading-8 text-black/65">{c.transport.intro}</p>
+  </div>
+  <div class="grid gap-5 md:grid-cols-3">
+    {
+      c.transport.cards.map((card) => (
+        <article class="rounded-3xl bg-white p-6 shadow-sm">
+          <p class="text-xs font-bold text-[#ef3f2f]">{card.kicker}</p>
+          <h3 class="mt-2 text-xl font-black">{card.title}</h3>
+          <p class="mt-3 leading-7 text-black/65">{card.body}</p>
+        </article>
+      ))
+    }
+  </div>
+  <p class="mt-6">
+    <a class="font-bold text-[#ef3f2f] underline decoration-2" href={directionsHref}>
+      {pick(locale, '查看港鐵出口與步程詳細指南 →', 'Step-by-step MTR exits and walking routes →')}
+    </a>
+  </p>
+</section>
+
+<section class="border-y border-black/10 bg-[#dde5e1] py-16">
+  <div class="mx-auto grid max-w-6xl gap-6 px-5 md:grid-cols-3">
+    {
+      c.practical.map((card) => (
+        <article class="ticket-notch bg-[#f4f0e6] p-7">
+          <p class="text-xs font-bold tracking-widest text-black/50">{card.label}</p>
+          <p class="mt-3 text-4xl font-black">{card.value}</p>
+          <p class="mt-3 text-sm leading-6 text-black/60">{card.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<section id="food" class="mx-auto max-w-6xl px-5 py-20">
+  <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">{c.food.kicker}</p>
+  <h2 class="mt-3 text-4xl font-black">{c.food.title}</h2>
+  <p class="mt-4 max-w-3xl leading-8 text-black/65">{c.food.intro}</p>
+  <div class="mt-8 grid gap-5 md:grid-cols-3">
+    {
+      c.food.cards.map((card) => (
+        <article class="rounded-3xl border border-black/10 bg-white p-6">
+          <p class="text-xs font-bold text-[#ef3f2f]">{card.kicker}</p>
+          <h3 class="mt-2 text-2xl font-black">{card.title}</h3>
+          <p class="mt-3 leading-7 text-black/65">{card.body}</p>
+        </article>
+      ))
+    }
+  </div>
+  <p class="mt-6">
+    <a class="font-bold text-[#ef3f2f] underline decoration-2" href={foodHref}>
+      {pick(locale, '查看沿途完整美食地圖 →', 'Explore the full food map →')}
+    </a>
+  </p>
+</section>
+
+<section id="nearby" class="bg-white/70 py-20">
+  <div class="mx-auto max-w-6xl px-5">
+    <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">{c.nearby.kicker}</p>
+    <h2 class="mt-3 text-4xl font-black">{c.nearby.title}</h2>
+    <p class="mt-4 max-w-3xl leading-8 text-black/65">{c.nearby.intro}</p>
+    <div class="mt-8 grid gap-5 md:grid-cols-3">
+      {
+        c.nearby.cards.map((card) => (
+          <article class="rounded-3xl bg-[#111719] p-6 text-white">
+            <p class="text-xs font-bold text-[#7aa79a]">{card.kicker}</p>
+            <h3 class="mt-2 text-2xl font-black">{card.title}</h3>
+            <p class="mt-3 leading-7 text-white/65">{card.body}</p>
+          </article>
+        ))
+      }
+    </div>
+    <p class="mt-6">
+      <a class="font-bold text-[#ef3f2f] underline decoration-2" href={attractionsHref}>
+        {pick(locale, '查看周邊景點與半日路線 →', 'See nearby attractions and a half-day route →')}
+      </a>
+    </p>
+  </div>
+</section>
+
+<section id="map" class="mx-auto max-w-6xl px-5 py-20">
+  <div class="mb-8">
+    <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">{c.map.kicker}</p>
+    <h2 class="mt-3 text-4xl font-black">{c.map.title}</h2>
+    <p class="mt-4 max-w-3xl leading-8 text-black/65">
+      {c.map.body} {pick(locale, 'Plus Code：', 'Plus code: ')}{ATTRACTION.plusCode}
+    </p>
+  </div>
+  <div class="overflow-hidden rounded-[2rem] border border-black/10 bg-white p-2 shadow-xl">
+    <iframe
+      title={t.mapAlt}
+      src={`https://www.google.com/maps?q=${ATTRACTION.latitude},${ATTRACTION.longitude}&z=16&output=embed&hl=${locale === 'en' ? 'en' : 'zh-HK'}`}
+      width="100%"
+      height="520"
+      style="border:0;border-radius:1.5rem"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+</section>
+
+<section id="faq" class="mx-auto max-w-4xl px-5 py-20">
+  <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">{t.faqKicker}</p>
+  <h2 class="mt-3 text-4xl font-black">{t.faqTitle}</h2>
+  <div class="mt-8 divide-y divide-black/10 border-y border-black/10">
+    {
+      c.faqs.map((item) => (
+        <details class="group py-5">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-lg font-bold">
+            <span>{item.q}</span>
+            <span class="text-[#ef3f2f] transition group-open:rotate-45">＋</span>
+          </summary>
+          <p class="max-w-3xl pt-4 leading-7 text-black/65">{item.a}</p>
+        </details>
+      ))
+    }
+  </div>
+</section>
+
+<section class="mx-auto max-w-6xl px-5 pb-20">
+  <div class="rounded-[2rem] bg-[#ef3f2f] p-8 text-white md:p-12">
+    <h2 class="text-3xl font-black">{c.closing.title}</h2>
+    <p class="mt-4 max-w-2xl leading-7 text-white/85">{c.closing.body}</p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a class="rounded-full bg-[#111719] px-5 py-3 font-bold" target="_blank" rel="noopener" href={ATTRACTION.govTransportUrl}>
+        {pick(locale, '運輸署資料', 'Transport Department')}
+      </a>
+      <a class="rounded-full border border-white/50 px-5 py-3 font-bold" target="_blank" rel="noopener" href={ATTRACTION.mapsUrl}>
+        Google Maps
+      </a>
+    </div>
+  </div>
+</section>

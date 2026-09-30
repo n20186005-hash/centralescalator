@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TopicPage from '../components/TopicPage.astro';
+import { topics } from '../content/topics';
+import { articleSchema, breadcrumbSchema, faqSchema } from '../lib/schema';
+import { localizedPath } from '../i18n';
+import { SITE_URL, withSiteName } from '../data/site';
+
+export const prerender = true;
+
+const locale = 'zh' as const;
+const slug = 'attractions' as const;
+const entry = topics[slug];
+const c = entry.content[locale];
+const updated = '2026-09-30';
+const url = `${SITE_URL}${localizedPath(locale, entry.path)}`;
+const jsonLd = [
+  articleSchema({ locale, title: c.h1, description: c.meta.description, url, dateModified: updated }),
+  faqSchema(c.faqs),
+  breadcrumbSchema([
+    { name: '首頁', path: `${SITE_URL}/` },
+    { name: entry.navLabel[locale], path: url },
+  ]),
+];
+---
+
+<BaseLayout
+  locale={locale}
+  path={entry.path}
+  title={withSiteName(c.meta.title, locale)}
+  description={c.meta.description}
+  jsonLd={jsonLd}
+>
+  <TopicPage locale={locale} slug={slug} updated={updated} />
+</BaseLayout>
