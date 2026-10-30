@@ -12,7 +12,7 @@ const locale = 'zh' as const;
 const slug = 'schedule' as const;
 const entry = topics[slug];
 const c = entry.content[locale];
-const updated = '2026-09-30';
+const updated = '2026-10-30';
 const url = `${SITE_URL}${localizedPath(locale, entry.path)}`;
 const jsonLd = [
   articleSchema({ locale, title: c.h1, description: c.meta.description, url, dateModified: updated }),

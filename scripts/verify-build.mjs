@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from 'node:fs';
 
-const dir = process.argv[2] ?? 'dist-static';
+const dir = process.argv[2] ?? 'dist/client';
 
 function read(p) {
   try {
@@ -41,7 +41,7 @@ for (const page of ['index.html', 'en/index.html', 'schedule/index.html', 'en/sc
   }
   const rating = html.match(/"aggregateRating"[\s\S]{0,220}/);
   if (rating) console.log('rating:', rating[0].replace(/\s+/g, ' '));
-  const hasMapWords = /10512|10,512/.test(html);
+  const hasMapWords = /10604|10,604/.test(html);
   console.log('reviewCount present (body/schema):', hasMapWords);
 }
 

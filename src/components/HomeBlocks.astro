@@ -1,4 +1,5 @@
 ---
+import Sources from './Sources.astro';
 import { ATTRACTION } from '../data/site';
 import { home } from '../content/home';
 import { localizedPath, ui, pick } from '../i18n';
@@ -25,10 +26,10 @@ const ratingLine = pick(
 <section class="relative isolate min-h-[78vh] overflow-hidden bg-[#111719] text-white">
   <img
     src={ATTRACTION.hero}
-    alt={pick(locale, '中環至半山自動扶手電梯實景', 'The Central-Mid-Levels Escalators in Central, Hong Kong')}
+    alt={pick(locale, '扶梯踏級與扶手細部，2019年歷史照片裁切', 'Detail of escalator steps and handrails, cropped historical 2019 photograph')}
     class="absolute inset-0 h-full w-full object-cover opacity-55"
     width="1600"
-    height="1067"
+    height="1067" fetchpriority="high"
     decoding="async"
   />
   <div class="absolute inset-0 bg-[linear-gradient(100deg,rgba(17,23,25,.96)_10%,rgba(17,23,25,.45)_55%,rgba(17,23,25,.75)_100%)]"></div>
@@ -42,7 +43,7 @@ const ratingLine = pick(
         {c.hero.titleTop}<br/><span class="text-[#ef3f2f]">{c.hero.titleAccent}</span>
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-8 text-white/85">{c.hero.lead}</p>
-      <p class="mt-3 text-sm text-white/60">{ratingLine} · {pick(locale, '免費乘搭', 'Free to ride')}</p>
+      <p class="mt-3 text-sm text-white/60">{ratingLine} · {pick(locale, '2026-10-30手工日期快照，不會自動更新；不是本站收集的評論', 'Manual snapshot dated 2026-10-30; does not update automatically; not reviews collected here')}</p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href={scheduleHref} class="rounded-full bg-[#ef3f2f] px-6 py-3 font-bold">{c.hero.ctaPrimary}</a>
         <a href="#map" class="rounded-full border border-white/50 px-6 py-3 font-bold">{c.hero.ctaSecondary}</a>
@@ -50,6 +51,7 @@ const ratingLine = pick(
     </div>
   </div>
 </section>
+<p class="photo-caption mx-auto max-w-6xl px-5 py-5">{pick(locale,'首圖為2019-06-12扶梯踏級與扶手細部照片裁切，不代表當日方向、現況或已確認入口。','Hero: cropped detail of escalator steps and handrails, photographed 2019-06-12; not today’s direction, current conditions or a verified entrance.')} <a href="https://commons.wikimedia.org/wiki/File:Inside_the_Central-Mid-Levels_escalators.jpg">Mx. Granger / Wikimedia Commons</a> · <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>. {pick(locale,'已裁切、縮放及壓縮。','Cropped, resized and recompressed.')}</p>
 
 <section class="border-b border-black/10 bg-white/70">
   <div class="mx-auto grid max-w-6xl grid-cols-2 md:grid-cols-4">
@@ -94,11 +96,11 @@ const ratingLine = pick(
   <div class="mx-auto grid max-w-6xl gap-8 px-5 md:grid-cols-2 md:items-center">
     <img
       src="/images/escalator-interior.jpg"
-      alt={pick(locale, '扶手電梯內部實景', 'Inside the covered escalator system')}
+      alt={pick(locale, '有蓋扶梯內部，2019年歷史照片', 'Inside the covered escalator, historical photograph from 2019')}
       class="h-[520px] w-full rounded-[2rem] object-cover"
       loading="lazy"
       width="1280"
-      height="960"
+      height="1600"
     />
     <div>
       <p class="font-mono text-xs tracking-[.25em] text-[#7aa79a]">{c.timing.kicker}</p>
@@ -136,7 +138,7 @@ const ratingLine = pick(
   </div>
   <p class="mt-6">
     <a class="font-bold text-[#ef3f2f] underline decoration-2" href={directionsHref}>
-      {pick(locale, '查看港鐵出口與步程詳細指南 →', 'Step-by-step MTR exits and walking routes →')}
+      {pick(locale, '查看交通與入口確認指南 →', 'Read transport and entrance-planning guidance →')}
     </a>
   </p>
 </section>
@@ -172,7 +174,7 @@ const ratingLine = pick(
   </div>
   <p class="mt-6">
     <a class="font-bold text-[#ef3f2f] underline decoration-2" href={foodHref}>
-      {pick(locale, '查看沿途完整美食地圖 →', 'Explore the full food map →')}
+      {pick(locale, '查看餐飲目錄與用餐規劃 →', 'Read venue-directory and dining guidance →')}
     </a>
   </p>
 </section>
@@ -195,7 +197,7 @@ const ratingLine = pick(
     </div>
     <p class="mt-6">
       <a class="font-bold text-[#ef3f2f] underline decoration-2" href={attractionsHref}>
-        {pick(locale, '查看周邊景點與半日路線 →', 'See nearby attractions and a half-day route →')}
+        {pick(locale, '查看其他場館與行程確認 →', 'Check separate venues and trip planning →')}
       </a>
     </p>
   </div>
@@ -206,20 +208,10 @@ const ratingLine = pick(
     <p class="font-mono text-xs font-bold tracking-[.25em] text-[#ef3f2f]">{c.map.kicker}</p>
     <h2 class="mt-3 text-4xl font-black">{c.map.title}</h2>
     <p class="mt-4 max-w-3xl leading-8 text-black/65">
-      {c.map.body} {pick(locale, 'Plus Code：', 'Plus code: ')}{ATTRACTION.plusCode}
+      {c.map.body}
     </p>
   </div>
-  <div class="overflow-hidden rounded-[2rem] border border-black/10 bg-white p-2 shadow-xl">
-    <iframe
-      title={t.mapAlt}
-      src={`https://www.google.com/maps?q=${ATTRACTION.latitude},${ATTRACTION.longitude}&z=16&output=embed&hl=${locale === 'en' ? 'en' : 'zh-HK'}`}
-      width="100%"
-      height="520"
-      style="border:0;border-radius:1.5rem"
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-    ></iframe>
-  </div>
+  <a class="map-link" href={ATTRACTION.mapsUrl} target="_blank" rel="noopener noreferrer">{pick(locale, '開啟Google地圖核對位置 ↗', 'Open Google Maps to check the location ↗')}</a>
 </section>
 
 <section id="faq" class="mx-auto max-w-4xl px-5 py-20">
@@ -254,3 +246,5 @@ const ratingLine = pick(
     </div>
   </div>
 </section>
+
+<div class="mx-auto max-w-6xl px-5 pb-12"><Sources locale={locale}/></div>

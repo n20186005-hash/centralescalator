@@ -9,7 +9,7 @@ const site = 'https://centralescalator.com';
 export default defineConfig({
   site,
   output: 'server',
-  adapter: cloudflare(),
+  adapter: cloudflare({ configPath: 'wrangler.jsonc' }),
   // 繁体中文（香港）为默认语言，位于站点根；英文位于 /en/。
   i18n: {
     defaultLocale: 'zh',

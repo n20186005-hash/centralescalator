@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Consent from '../components/Consent.astro';
 import { ATTRACTION, SITE_URL, siteName } from '../data/site';
 import { hreflangAlternates, localeMeta, localizedPath, navItems, pick, switchHref, ui } from '../i18n';
 import type { Locale, PathKey } from '../i18n';
@@ -25,6 +26,7 @@ const langHref = switchHref(locale, path);
 const langLabel = pick(locale, 'EN', '中');
 const nav = navItems(locale);
 const meta = localeMeta[locale];
+const schemas=[...jsonLd,{'@context':'https://schema.org','@type':'WebPage','@id':canonical+'#webpage',url:canonical,name:title,description,inLanguage:meta.htmlLang,about:{'@id':SITE_URL+'/#attraction'}}];
 ---
 
 <!doctype html>
@@ -44,11 +46,12 @@ const meta = localeMeta[locale];
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageAbs} />
-    <meta property="og:image:alt" content={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} />
+    <meta property="og:image:alt" content={pick(locale, '2019年扶梯踏級與扶手歷史照片裁切', 'Detail of escalator steps and handrails, cropped historical 2019 photograph')} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageAbs} />
+    <meta name="twitter:image:alt" content={pick(locale, '2019年扶梯踏級與扶手照片裁切', 'Escalator steps and handrails, cropped 2019 photograph')} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
@@ -57,7 +60,7 @@ const meta = localeMeta[locale];
     <meta name="theme-color" content="#111719" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-    {jsonLd.map((schema) => (
+    {schemas.map((schema) => (
       <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
     ))}
   </head>
@@ -66,11 +69,11 @@ const meta = localeMeta[locale];
     <a href="#main" class="sr-focus">{t.skipNav}</a>
 
     <header class="sticky top-0 z-50 border-b border-black/10 bg-[#f4f0e6]/95 backdrop-blur">
-      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+      <div class="site-header-row mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
         <a href={homeHref} aria-label={pick(locale, '返回首頁', 'Back to home')}>
-          <img src="/logo.svg" alt={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} class="h-12 w-auto" />
+          <img src="/logo.svg" alt={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} width="190" height="48" class="site-logo h-12 w-auto" />
         </a>
-        <nav class="hidden gap-5 text-sm font-semibold md:flex" aria-label={pick(locale, '主選單', 'Main menu')}>
+        <details class="site-menu"><summary>{pick(locale, '選單', 'Menu')} ☰</summary><nav aria-label={pick(locale, '主選單', 'Main menu')}>
           {
             nav.map((item) => (
               <a href={item.href} class="hover:text-[#ef3f2f]">
@@ -78,7 +81,7 @@ const meta = localeMeta[locale];
               </a>
             ))
           }
-        </nav>
+        </nav></details>
         <div class="flex items-center gap-3">
           <a href={langHref} class="text-sm font-bold underline decoration-dotted" aria-label={t.languageLabel}>{langLabel}</a>
           <a href={ATTRACTION.mapsUrl} rel="noopener" target="_blank" class="rounded-full bg-[#111719] px-4 py-2 text-sm font-bold text-white">{t.openMap}</a>
@@ -94,7 +97,7 @@ const meta = localeMeta[locale];
       <div class="mx-auto max-w-6xl px-5 py-10">
         <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div class="max-w-xl">
-            <img src="/logo.svg" alt={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} class="h-12 w-auto" />
+            <img src="/logo.svg" alt={pick(locale, ATTRACTION.name, ATTRACTION.nameEn)} width="190" height="48" class="site-logo h-12 w-auto" />
             <p class="mt-4 text-sm leading-6 text-white/55">{t.disclaimer}</p>
           </div>
           <nav aria-label={t.explore} class="min-w-[200px]">
@@ -139,54 +142,12 @@ const meta = localeMeta[locale];
           <a href={`${homeHref}#privacy`}>{t.privacyTitle}</a>
           <a href={`${homeHref}#terms`}>{t.termsTitle}</a>
         </div>
-        <div id="privacy" class="mt-6 text-xs leading-6 text-white/45">{t.privacyTitle}：{t.privacyBody}</div>
-        <div id="terms" class="mt-4 text-xs leading-6 text-white/45">{t.termsTitle}：{t.termsBody}</div>
-        <div class="mt-5 text-[11px] leading-5 text-white/35">{t.photoCredit}</div>
+        <div id="privacy" class="privacy-notice mt-6">{t.privacyTitle}：{t.privacyBody}<p><a class="underline" href="https://policies.google.com/privacy">Google privacy</a> · <a class="underline" href="https://developers.cloudflare.com/web-analytics/data-metrics/">Cloudflare Web Analytics</a> · <a class="underline" href="https://www.cloudflare.com/privacypolicy/">Cloudflare privacy</a></p></div>
+        <div id="terms" class="privacy-notice mt-4">{t.termsTitle}：{t.termsBody}</div>
+        <div class="mt-5 text-sm leading-6 text-white/80">{t.photoCredit} <a href="https://commons.wikimedia.org/wiki/File:Inside_the_Central-Mid-Levels_escalators.jpg" class="underline">Mx. Granger / Wikimedia Commons</a> · <a class="underline" href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a> · {pick(locale,'2019-06-12歷史照片，已縮放、壓縮；首圖與社交圖另經裁切，不代表現況。','Historical photo dated 2019-06-12; resized/recompressed, with additional hero/social crops. Not current conditions.')}</div>
       </div>
     </footer>
 
-    <div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-[60] mx-auto hidden max-w-xl rounded-3xl border border-black/10 bg-white p-5 shadow-2xl">
-      <p class="font-bold">{t.cookieTitle}</p>
-      <p class="mt-2 text-sm leading-6 text-black/60">{t.cookieBody}</p>
-      <div class="mt-4 flex gap-3">
-        <button id="accept-analytics" class="rounded-full bg-[#111719] px-4 py-2 text-sm font-bold text-white">{t.cookieAccept}</button>
-        <button id="reject-analytics" class="rounded-full border border-black/20 px-4 py-2 text-sm font-bold">{t.cookieReject}</button>
-      </div>
-    </div>
-
-    <script is:inline>
-      (() => {
-        const KEY = 'cmle-cookie-choice';
-        const banner = document.getElementById('cookie-banner');
-        const loadGA = () => {
-          if (document.querySelector('script[data-ga4]')) return;
-          const s = document.createElement('script');
-          s.async = true;
-          s.dataset.ga4 = 'true';
-          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
-          document.head.appendChild(s);
-          window.dataLayer = window.dataLayer || [];
-          function gtag() {
-            dataLayer.push(arguments);
-          }
-          window.gtag = gtag;
-          gtag('js', new Date());
-          gtag('config', 'G-HXM22WWPKP', { anonymize_ip: true });
-        };
-        const saved = localStorage.getItem(KEY);
-        if (!saved) banner?.classList.remove('hidden');
-        if (saved === 'yes') loadGA();
-        document.getElementById('accept-analytics')?.addEventListener('click', () => {
-          localStorage.setItem(KEY, 'yes');
-          loadGA();
-          banner?.classList.add('hidden');
-        });
-        document.getElementById('reject-analytics')?.addEventListener('click', () => {
-          localStorage.setItem(KEY, 'no');
-          banner?.classList.add('hidden');
-        });
-        document.getElementById('cookie-settings')?.addEventListener('click', () => banner?.classList.remove('hidden'));
-      })();
-    </script>
+    <Consent locale={locale}/>
   </body>
 </html>

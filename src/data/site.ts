@@ -1,6 +1,6 @@
 /**
  * 景点事实的唯一来源。
- * 任何分数、地址、坐标、 Plus Code、外链改动只在此处理改，页面与 JSON-LD 会自动同步。
+ * 日期快照與公開參考連結集中管理；不將第三方評價或地址自動轉為無條件結構化主張。
  */
 
 export const SITE_DOMAIN = 'centralescalator.com';
@@ -29,7 +29,7 @@ export const ATTRACTION = {
   alternateNames: ['中環至半山自動扶手電梯', '半山扶手電梯', '中環半山自動扶梯', 'Central Escalator'],
   category: '旅遊景點',
   /** Google Maps 评分快照，同步于 2026 年 9 月：4.1 分 / 10,512 则评论 */
-  aggregateRating: { ratingValue: '4.1', reviewCount: 10512, bestRating: '5' },
+  aggregateRating: { ratingValue: '4.1', reviewCount: 10604, bestRating: '5' },
   ratingSourceLabel: 'Google Maps 評價',
   /** Google Maps 显示地址 */
   address: '香港香港島中環租庇利街',
@@ -37,10 +37,6 @@ export const ATTRACTION = {
   addressLocality: '中環',
   addressRegion: '香港島',
   addressCountry: 'HK',
-  /** 南端起点（皇后大道中／租庇利街一带）坐标 */
-  latitude: 22.2838464,
-  longitude: 114.1549689,
-  plusCode: '75M3+GX 中環 香港',
   /** Google 地图分享短链 */
   mapsUrl: 'https://maps.app.goo.gl/kYnouGXP34XBKHnp8',
   /** 交通运输署 · 香港上山扶梯系统 */
@@ -49,18 +45,9 @@ export const ATTRACTION = {
     'https://www.td.gov.hk/en/transport_in_hong_kong/pedestrians/hillside_escalator/index.html',
   wikipediaUrl: 'https://en.wikipedia.org/wiki/Central%E2%80%93Mid-Levels_escalator',
   wikipediaUrlZh: 'https://zh.wikipedia.org/wiki/%E4%B8%AD%E7%92%B0%E8%87%B3%E5%8D%8A%E5%B1%B1%E8%87%AA%E5%8B%95%E6%89%B6%E6%A2%AF%E7%B3%BB%E7%B5%B1',
-  tourismUrl: 'https://www.discoverhongkong.com/hk-tc/interactive-map/mid-levels-escalator.html',
+  tourismUrl: 'https://www.discoverhongkong.com/tc/place-to-go/travel.guide-central-mid-levels-escalator.html',
   image: '/images/og-cover.jpg',
   hero: '/images/escalator-hero.jpg',
-  /**
-   * 方向时段（据运输署公布）：
-   * 06:00–10:00 向下（往中環／皇后大道中方向），10:20–00:00 向上（往半山／干德道方向）。
-   */
-  directionSchedule: {
-    downhill: { opens: '06:00', closes: '10:00' },
-    uphill: { opens: '10:20', closes: '24:00' },
-  },
-  isAccessibleForFree: true,
   lengthMeters: 800,
   escalatorCount: 16,
   walkwayCount: 3,

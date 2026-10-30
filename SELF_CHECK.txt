@@ -1,30 +1,6 @@
-SELF-CHECK STATUS (updated 2026-09-30)
-
-Environment used
-- Node v24.19.0 (C:\Users\dcc\.workbuddy\binaries\node\versions\node-v24.19.0-win-x64) placed first on PATH
-- pnpm 12.4.2 started via node: node "$env:LOCALAPPDATA\pnpm\.tools\pnpm\12.4.2\node_modules\pnpm\bin\pnpm.mjs" install --config.node-linker=hoisted
-- NODE_OPTIONS / CODEBUDDY_SAFE_DELETE_SHIM_DIR / GENIE_TRASH_DIR cleared before install
-
-Passed locally
-- dependencies installed (pnpm v12.4.2), pnpm-lock.yaml generated, pnpm-workspace.yaml normalised to real booleans
-- wrangler upgraded to 4.143.0 to satisfy @cloudflare/vite-plugin peer requirement
-- `CI=1 astro check` (node node_modules\astro\bin\astro.mjs check): 22 files, 0 errors, 0 warnings, 0 hints
-- `astro build --config astro.config.static.mjs` (no adapter, output static, outDir dist-static): 11 pages, Complete!
-  /, /schedule/, /directions/, /food/, /attractions/, /en/, /en/schedule/, /en/directions/, /en/food/, /en/attractions/, /404
-- sitemap-index.xml + sitemap-0.xml produced with xhtml:link alternates for zh-HK / en; /404 excluded
-- verified in built HTML: canonical https URLs, hreflang zh-HK / en / x-default, og:url, og:image (1200x630 jpg, not svg),
-  twitter card, WebSite + Organization + TouristAttraction + FAQPage on home, Article + FAQPage + BreadcrumbList on topics,
-  aggregateRating 4.1 / 10512 from src/data/site.ts single source
-- public/robots.txt (references https sitemap-index.xml) and public/_headers (HSTS + security headers + Google-compatible CSP) copied to build output
-- images: escalator-hero.jpg (260 KB), escalator-interior.jpg (313 KB), og-cover.jpg (98 KB) — all well under the 25 MiB Workers asset limit
-
-Blocked by sandbox
-- the real adapter build (`node node_modules\astro\bin\astro.mjs build`) crashes at "prerendering static routes" with workerd 0xc0000005.
-  This is a known Windows sandbox limitation of the cloudflare adapter, not a code defect; Cloudflare-side builds are unaffected.
-  Pages were therefore validated with the temporary static config described in README.md; that config and dist-static were removed afterwards.
-- therefore dist/ (dist/client + dist/server) was not produced locally; run the build in CI or on Cloudflare before wrangler deploy.
-
-Still to be done outside the repository
-- Cloudflare console: Always Use HTTPS (http -> https 301) and a Redirect Rule for www -> apex
-- Search Console: re-verify the https property and submit https://centralescalator.com/sitemap-index.xml
-- Google Business Profile: ensure the website field points to https://centralescalator.com/
+Local verification uses the unchanged native Astro/Cloudflare architecture and exact pinned dependencies.
+Run normal pnpm frozen installation, the repository check, historical npm build and default Wrangler dry-run.
+Serve the final built native entry for routes, assets, true 404 and protocol/host guards.
+Source fixtures and local HTTP tests are not production or browser-visual acceptance.
+Official operating pages differ on the uphill start; retain attribution and limits rather than inventing a reconciliation.
+The GA choice controls site analytics only; inspect final production HTML for independent hosting injection.

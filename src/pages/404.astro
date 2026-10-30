@@ -3,7 +3,8 @@ import '../styles/global.css';
 import { ATTRACTION, SITE_URL } from '../data/site';
 import { localizedPath } from '../i18n';
 
-export const prerender = true;
+export const prerender = false;
+Astro.response.status = 404;
 ---
 
 <!doctype html>

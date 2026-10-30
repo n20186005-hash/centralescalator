@@ -1,82 +1,15 @@
-# 中環半山扶手電梯（Central-Mid-Levels Escalators）— Astro 景點網站
+# Central–Mid-Levels Escalators guide
 
-非官方旅遊資訊網站，域名 [https://centralescalator.com](https://centralescalator.com)。
+Traditional Chinese and English pages use the existing Astro server/prerendered architecture and shared typed home/topic content. The site is an independent, unofficial, nonprofit tourism and educational guide, not the operator.
 
-## 技術棧
+Use Node 24.18.1 and pnpm 12.4.2. Keep all exact dependency versions and pnpm-lock.yaml. Normal installation: `pnpm install --frozen-lockfile`. Checks: `pnpm run check`; historical production build: `npm run build`. Default deployment uses `npx wrangler deploy` and the adapter-generated config for existing project `centralescalator`, preserving SESSION/IMAGES/ASSETS. No new domain bindings are declared. The source Worker wrapper is compiled before adapter asset handling. Local preview after building: `pnpm exec wrangler dev --ip 127.0.0.1 --port 8949 --local`.
 
-- Astro 7.3.3 + Tailwind CSS 4（`@tailwindcss/vite`）+ TypeScript
-- `@astrojs/cloudflare` 14.3.2（`output: 'server'`）+ `@astrojs/sitemap` 3.7.4
-- 手動部署：`pnpm build && wrangler deploy`（Cloudflare Workers）
-- GA4 `G-HXM22WWPKP`，需使用者同意後才載入
-- JSON-LD：`WebSite` / `Organization` / `TouristAttraction`(+`Place`) / `FAQPage` / `Article` / `BreadcrumbList`
+Content sources are linked on every normal page. Transport Department and Tourism Board pages differ on the uphill start (10:00 versus 10:20); neither difference proves a system-wide shutdown. They agree on downhill 06:00–10:00 and the Queen’s Road Central–Conduit Road route. No fixed walking-time circle or surveyed accessible route is promised.
 
-## 站點架構（繁體中文為預設語言，英文在 `/en/`）
+The original GA consent storage key and yes/no values remain. Refusal disables the loaded runtime immediately; saved refusal reloads. Grants require verified storage readback, and a per-tab veto protects refusals. Storage failures remain visibly unsaved and off. These controls do not govern independent hosting measurement.
 
-| 路徑 | 內容 |
-| --- | --- |
-| `/` · `/en/` | 扶手電梯完整指南：方向時段、沿途路段、最佳時段、交通、費用、美食、周邊、FAQ、地圖 |
-| `/schedule/` · `/en/schedule/` | 運作時間與乘搭攻略（上行下行時段表、維修與惡劣天氣） |
-| `/directions/` · `/en/directions/` | 交通指南（港鐵中環站／香港站、渡輪、電車巴士、的士步程對照表、Plus Code） |
-| `/food/` · `/en/food/` | 沿途美食地圖（按扶梯分段） |
-| `/attractions/` · `/en/attractions/` | 周邊景點與半日路線（大館、中環街市、PMQ、文武廟等） |
-| `/404` | 404 頁（`noindex`，不進 sitemap） |
+## Historical image
 
-所有頁面均輸出 HTTPS `canonical`、`hreflang`（`zh-HK` / `en` / `x-default`→繁中版）、OG/Twitter 絕對 URL；sitemap 以 `xhtml:link` 输出多语对照：
+Only **Inside the Central-Mid-Levels escalators.jpg**, Mx. Granger, 2019-06-12, is used. Exact source: https://commons.wikimedia.org/wiki/File:Inside_the_Central-Mid-Levels_escalators.jpg . Licence: https://creativecommons.org/publicdomain/zero/1.0/ . Local full interior variant is resized/recompressed; hero and social variants crop the lower steps/handrails from the same original. Visible credits identify the historical date and modifications. No blanket clearance of other depicted subject rights is claimed. The former crowd/advertising hero and its OG composition are retired.
 
-```
-https://centralescalator.com/sitemap-index.xml
-```
-
-## 程式碼結構
-
-- `src/data/site.ts`：**景點事實唯一來源**（名稱、評分 4.1 / 10,512、地址、經緯度、Plus Code、地圖短鏈、官方連結、方向時段、SEO 站名 `中環半山扶手電梯香港旅遊指南` / `Central–Mid-Levels Escalators Hong Kong — Travel Guide`）。改動價格、評分、地址只動這裡。
-- `src/i18n.ts`：語種、語區 meta、`localizedPath()` / `hreflangAlternates()` / `navItems()` / `ui` 字典。
-- `src/content/home.ts`：首頁雙語文案（含 TDK）。
-- `src/content/topics.ts`：四個專題頁雙語文案（含 TDK、區塊、表格、FAQ、延伸連結）。
-- `src/lib/schema.ts`：結構化資料建構器。
-- `src/layouts/BaseLayout.astro`：全站 head（canonical / hreflang / OG / JSON-LD）、雙語導覽、語言切換、頁腳、Cookie 同意。
-- `src/components/HomeBlocks.astro` / `TopicPage.astro`：內容渲染元件。
-
-## 開發與建置
-
-需要 Node 24（`packageManager` 為 pnpm 12.4.2）：
-
-```powershell
-$env:NODE_OPTIONS = ""
-$env:CODEBUDDY_SAFE_DELETE_SHIM_DIR = ""
-$env:GENIE_TRASH_DIR = ""
-$env:PATH = "C:\Users\dcc\.workbuddy\binaries\node\versions\node-v24.19.0-win-x64;$env:PATH"
-
-node "$env:LOCALAPPDATA\pnpm\.tools\pnpm\12.4.2\node_modules\pnpm\bin\pnpm.mjs" install --config.node-linker=hoisted
-$env:CI = "1"; node node_modules\astro\bin\astro.mjs check   # 類型檢查
-node node_modules\astro\bin\astro.mjs build                  # 正式建置
-```
-
-`@astrojs/cloudflare` 要求 `wrangler@^4.143.0`，升級適配器時請一併調整並更新 lockfile。
-
-### 已知本機限制
-
-在 Windows 沙箱執行一般 `astro build` 時，適配器會在「prerendering static routes」階段啟動 workerd 並出現 `0xc0000005` 存取違規，這是本機環境問題，與專案程式碼無關（Cloudflare 端建置正常）。若要在本機校驗頁面 HTML，請暫時建立一份不含 adapter、`output: 'static'`、`outDir: 'dist-static'` 的設定檔：
-
-```powershell
-node node_modules\astro\bin\astro.mjs build --config astro.config.static.mjs
-node scripts\verify-build.mjs dist-static
-```
-
-校驗完成後刪除暫存設定與 `dist-static`。
-
-## 圖片與資產
-
-`scripts/gen-assets.py` 負責壓縮 `public/images/*.jpg` 並產生 `/images/og-cover.jpg`（1200×630 OG 封面）：
-
-```bash
-python scripts/gen-assets.py
-```
-
-相片來源：Wikimedia Commons（Z thomas，CC BY-SA 4.0；Mx. Granger，CC0 1.0），已隨專案附上。
-
-## 部署後仍需在 Cloudflare 控制台處理
-
-- **HTTP → HTTPS 301**：開啟 *Always Use HTTPS*（`public/_headers` 已發送 HSTS，但網域級 301 只能在控制台設定）。
-- **www → apex 301**：以 Redirect Rules 設定（Workers Static Assets 不支援網域級 `_redirects`）。
-- 在 Search Console 重新驗證 `https://centralescalator.com/` 資源，並提交 `sitemap-index.xml`。
+The build removes local machine root paths from deliverable modules, leaving necessary local generated Wrangler configuration metadata. Production exact-commit, required host entrances, browser layout, images and analytics network observations remain separate acceptance gates.

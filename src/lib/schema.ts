@@ -21,7 +21,6 @@ function addressBlock(locale: Locale) {
   if (locale === 'en') {
     return {
       '@type': 'PostalAddress',
-      streetAddress: 'Jubilee Street',
       addressLocality: 'Central',
       addressRegion: 'Hong Kong Island',
       addressCountry: 'HK',
@@ -29,7 +28,6 @@ function addressBlock(locale: Locale) {
   }
   return {
     '@type': 'PostalAddress',
-    streetAddress: ATTRACTION.streetAddress,
     addressLocality: ATTRACTION.addressLocality,
     addressRegion: ATTRACTION.addressRegion,
     addressCountry: ATTRACTION.addressCountry,
@@ -40,8 +38,8 @@ function addressBlock(locale: Locale) {
 export function attractionSchema(locale: Locale, url: string, imageAbs: string) {
   const description =
     locale === 'en'
-      ? 'The Central–Mid-Levels Escalators form the longest covered escalator system in the world, linking Queen’s Road Central with Conduit Road in Hong Kong’s Mid-Levels.'
-      : '中環至半山自動扶梯系統是全球最長的戶外有蓋扶手電梯系統，連接中環皇后大道中與半山干德道，全長逾 800 米。';
+      ? 'The Central–Mid-Levels Escalators form one of the world’s longest outdoor covered escalator systems, linking Queen’s Road Central with Conduit Road in Hong Kong’s Mid-Levels.'
+      : '中環至半山自動扶梯系統是全球最長的戶外有蓋扶手電梯系統之一，連接中環皇后大道中與半山干德道，全長逾 800 米。';
 
   return {
     '@context': 'https://schema.org',
@@ -53,41 +51,10 @@ export function attractionSchema(locale: Locale, url: string, imageAbs: string) 
     url,
     image: [imageAbs],
     address: addressBlock(locale),
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: ATTRACTION.latitude,
-      longitude: ATTRACTION.longitude,
-    },
     hasMap: ATTRACTION.mapsUrl,
     sameAs: sameAs(),
-    isAccessibleForFree: ATTRACTION.isAccessibleForFree,
     touristType: locale === 'en' ? ['Sightseeing', 'Walking'] : ['觀光', '散步'],
-    openingHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: [
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday',
-          'Saturday',
-          'Sunday',
-        ],
-        opens: '06:00',
-        closes: '24:00',
-        description:
-          locale === 'en'
-            ? 'Downhill 06:00–10:00; uphill 10:20–24:00.'
-            : '06:00–10:00 下行（往中環方向）；10:20–24:00 上行（往半山方向）。',
-      },
-    ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: ATTRACTION.aggregateRating.ratingValue,
-      reviewCount: ATTRACTION.aggregateRating.reviewCount,
-      bestRating: ATTRACTION.aggregateRating.bestRating,
-    },
+
   };
 }
 
@@ -152,7 +119,7 @@ export function articleSchema(args: {
     headline: args.title,
     description: args.description,
     url: args.url,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': args.url },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': args.url+'#webpage' },
     image: [`${SITE_URL}${ATTRACTION.image}`],
     dateModified: args.dateModified,
     inLanguage: args.locale === 'en' ? 'en' : 'zh-HK',

@@ -1,0 +1,26 @@
+---
+import { ui, pick } from '../i18n';
+import type { Locale } from '../i18n';
+const {locale}=Astro.props as {locale:Locale};const t=ui[locale];
+---
+<div id="cookie-banner" class="consent-panel" hidden role="region" aria-label={t.cookieTitle}><p class="font-bold">{t.cookieTitle}</p><p>{t.cookieBody}</p><p id="cookie-error" hidden role="status">{pick(locale,'瀏覽器未能確認儲存選擇，本頁分析已停用。舊的跨頁選擇可能仍在，請檢查瀏覽器網站資料；本站不會將此顯示為已儲存。','The browser could not confirm saving your choice. Analytics is off on this page. An older shared choice may remain; check browser site data. This is not reported as saved.')}</p><div class="consent-actions"><button id="accept-analytics" type="button">{t.cookieAccept}</button><button id="reject-analytics" type="button">{t.cookieReject}</button></div></div>
+<script is:inline>
+(()=>{
+const KEY='cmle-cookie-choice',VETO=KEY+'-tab-veto',GA='G-HXM22WWPKP';
+const banner=document.getElementById('cookie-banner'),error=document.getElementById('cookie-error');let loaderStarted=false;
+const read=(store,key)=>{try{return{ok:true,value:store.getItem(key)}}catch{return{ok:false,value:null}}};
+const local=()=>{try{return localStorage}catch{return null}},session=()=>{try{return sessionStorage}catch{return null}};
+const verified=(store,key,value)=>{try{if(value===null)store.removeItem(key);else store.setItem(key,value);const result=read(store,key);return result.ok&&result.value===value}catch{return false}};
+const state=()=>{const a=read(local(),KEY),b=read(session(),VETO);return{ok:a.ok&&b.ok,grant:a.ok&&b.ok&&a.value==='yes'&&b.value!=='no',denied:a.ok&&b.ok&&(a.value==='no'||b.value==='no')}};
+const off=()=>{window['ga-disable-'+GA]=true;if(typeof window.gtag==='function')window.gtag('consent','update',{analytics_storage:'denied'});};
+const eraseCookies=()=>{for(const item of document.cookie.split(';')){const name=item.trim().split('=')[0];if(!/^_ga(?:_|$)|^_gid$|^_gat/.test(name))continue;for(const domain of['',location.hostname,'.'+location.hostname,'.centralescalator.com'])document.cookie=name+'=; Max-Age=0; Path=/'+(domain?'; Domain='+domain:'')+'; SameSite=Lax';}};
+const denyShared=()=>verified(local(),KEY,'no')||verified(local(),KEY,null);
+const failed=()=>{off();verified(session(),VETO,'no');denyShared();banner.hidden=false;error.hidden=false;};
+const load=()=>{window['ga-disable-'+GA]=false;window.dataLayer=window.dataLayer||[];if(typeof window.gtag!=='function')window.gtag=function(){window.dataLayer.push(arguments)};window.gtag('consent','update',{analytics_storage:'granted'});if(loaderStarted||document.querySelector('script[data-ga4]')){loaderStarted=true;return;}const script=document.createElement('script');script.async=true;script.dataset.ga4='true';script.src='https://www.googletagmanager.com/gtag/js?id='+GA;window.gtag('js',new Date());window.gtag('config',GA);document.head.appendChild(script);loaderStarted=true;};
+const initial=state();if(initial.grant){load();banner.hidden=true}else{off();banner.hidden=initial.denied;}
+document.getElementById('accept-analytics')?.addEventListener('click',()=>{off();if(!verified(session(),VETO,null)){failed();return;}if(!verified(local(),KEY,'yes')){failed();return;}if(!state().grant){failed();return;}error.hidden=true;banner.hidden=true;load();});
+document.getElementById('reject-analytics')?.addEventListener('click',()=>{off();const veto=verified(session(),VETO,'no'),saved=denyShared();eraseCookies();if(!saved||!veto){banner.hidden=false;error.hidden=false;return;}error.hidden=true;banner.hidden=true;if(loaderStarted)location.reload();});
+document.getElementById('cookie-settings')?.addEventListener('click',()=>{banner.hidden=false;});
+window.addEventListener('storage',event=>{if(event.key!==KEY)return;const current=state();if(!current.grant){off();if(!current.ok){banner.hidden=false;error.hidden=false;}}});
+})();
+</script>
