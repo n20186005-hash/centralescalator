@@ -13,8 +13,9 @@ export const localeMeta: Record<
   en: { htmlLang: 'en', ogLocale: 'en_US', label: 'English', short: 'EN', hreflang: 'en' },
 };
 
-/** 站内的语言中立路径，写作 'schedule/' 或 ''（首页） */
-export type PathKey = '' | 'schedule/' | 'directions/' | 'attractions/' | 'food/' | 'privacy/' | 'terms/' | 'cookies/';
+/** 站内的语言中立路径，写作 'schedule/'、'nearby/tai-kwun/' 或 ''（首页）。
+ *  刻意使用 string：新增专题路径无需逐一登记字面量类型。 */
+export type PathKey = string;
 
 export function localizedPath(locale: Locale, path: PathKey = ''): string {
   return locale === defaultLocale ? `/${path}` : `/${locale}/${path}`;
@@ -55,6 +56,7 @@ export function navItems(locale: Locale): NavItem[] {
       { label: 'Getting here', href: p('directions/') },
       { label: 'Food', href: p('food/') },
       { label: 'Nearby', href: p('attractions/') },
+      { label: 'All guides', href: `${p('')}#guides` },
       { label: 'FAQ', href: `${p('')}#faq` },
     ];
   }
@@ -63,6 +65,7 @@ export function navItems(locale: Locale): NavItem[] {
     { label: '交通指南', href: p('directions/') },
     { label: '美食', href: p('food/') },
     { label: '周邊', href: p('attractions/') },
+    { label: '專題指南', href: `${p('')}#guides` },
     { label: 'FAQ', href: `${p('')}#faq` },
   ];
 }
@@ -100,6 +103,18 @@ interface UiStrings {
   photoCredit: string;
   officialSource: string;
   mapAlt: string;
+  guidesKicker: string;
+  guidesTitle: string;
+  guidesLead: string;
+  guidesCount: string;
+  guideQuickFacts: string;
+  guideSteps: string;
+  guideRelated: string;
+  guideRelatedLead: string;
+  guideAll: string;
+  guideGroup: string;
+  guideMapSearch: string;
+  guideCheck: string;
 }
 
 export const ui: Record<Locale, UiStrings> = {
@@ -131,6 +146,19 @@ export const ui: Record<Locale, UiStrings> = {
     photoCredit: '照片來源與修改說明：',
     officialSource: '官方與權威連結',
     mapAlt: '中環至半山自動扶手電梯位置地圖',
+    guidesKicker: 'TOPIC GUIDES',
+    guidesTitle: '專題指南：由入口方向到半日行程',
+    guidesLead:
+      '每一頁只回答一個搜尋問題，內容按入口、方向、歷史、沿途景點、餐飲與行程分組；易變的班次、維護與商戶安排，請以官方及現場公布為準。',
+    guidesCount: '繁體中文與 English 各一份',
+    guideQuickFacts: '快速核對',
+    guideSteps: '建議次序',
+    guideRelated: '相關專題',
+    guideRelatedLead: '把這個問題與鄰近的決策一併核對：',
+    guideAll: '返回全部專題指南',
+    guideGroup: '主題分類',
+    guideMapSearch: '在 Google 地圖搜尋相關地點 ↗',
+    guideCheck: '本頁為公開資料整理，不是即時營運狀態；出發前請核對運輸署通告與現場方向指示。',
   },
   en: {
     home: 'Home',
@@ -164,5 +192,19 @@ export const ui: Record<Locale, UiStrings> = {
     photoCredit: 'Image source and changes:',
     officialSource: 'Official and reference links',
     mapAlt: 'Map showing the location of the Central-Mid-Levels Escalators',
+    guidesKicker: 'TOPIC GUIDES',
+    guidesTitle: 'Topic guides: from entrances to half-day plans',
+    guidesLead:
+      'Each page answers one search question, grouped by access, direction, history, nearby places, food and itineraries. Check official notices and on-site signs for maintenance, hours and venues.',
+    guidesCount: 'Each in Traditional Chinese and English',
+    guideQuickFacts: 'Quick facts',
+    guideSteps: 'Suggested order',
+    guideRelated: 'Related guides',
+    guideRelatedLead: 'Check the decisions that usually come next:',
+    guideAll: 'Back to all topic guides',
+    guideGroup: 'Topic group',
+    guideMapSearch: 'Search related places on Google Maps ↗',
+    guideCheck:
+      'This page summarises public information and is not a live operating status. Check Transport Department notices and on-site direction signs before travelling.',
   },
 };

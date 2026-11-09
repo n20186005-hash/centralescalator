@@ -1,5 +1,6 @@
 ---
 import Sources from './Sources.astro';
+import GuideLinks from './GuideLinks.astro';
 import { ATTRACTION } from '../data/site';
 import { home } from '../content/home';
 import { localizedPath, ui, pick } from '../i18n';
@@ -43,7 +44,7 @@ const ratingLine = pick(
         {c.hero.titleTop}<br/><span class="text-[#ef3f2f]">{c.hero.titleAccent}</span>
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-8 text-white/85">{c.hero.lead}</p>
-      <p class="mt-3 text-sm text-white/60">{ratingLine} · {pick(locale, '2026-10-30手工日期快照，不會自動更新；不是本站收集的評論', 'Manual snapshot dated 2026-10-30; does not update automatically; not reviews collected here')}</p>
+      <p class="mt-3 text-sm text-white/60">{ratingLine} · {pick(locale, '2026-11-09手工日期快照，不會自動更新；不是本站收集的評論', 'Manual snapshot dated 2026-11-09; does not update automatically; not reviews collected here')}</p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href={scheduleHref} class="rounded-full bg-[#ef3f2f] px-6 py-3 font-bold">{c.hero.ctaPrimary}</a>
         <a href="#map" class="rounded-full border border-white/50 px-6 py-3 font-bold">{c.hero.ctaSecondary}</a>
@@ -202,6 +203,8 @@ const ratingLine = pick(
     </p>
   </div>
 </section>
+
+<GuideLinks locale={locale} />
 
 <section id="map" class="mx-auto max-w-6xl px-5 py-20">
   <div class="mb-8">

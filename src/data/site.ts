@@ -28,8 +28,8 @@ export const ATTRACTION = {
   officialNameEn: 'Central-Mid-Levels Escalator and Walkway System',
   alternateNames: ['中環至半山自動扶手電梯', '半山扶手電梯', '中環半山自動扶梯', 'Central Escalator'],
   category: '旅遊景點',
-  /** Google Maps 评分快照，同步于 2026 年 9 月：4.1 分 / 10,512 则评论 */
-  aggregateRating: { ratingValue: '4.1', reviewCount: 10604, bestRating: '5' },
+  /** Google Maps 评分快照：4.1 分 / 10,641 则评论，按 2026-11-09 提供的日期快照 */
+  aggregateRating: { ratingValue: '4.1', reviewCount: 10641, bestRating: '5' },
   ratingSourceLabel: 'Google Maps 評價',
   /** Google Maps 显示地址 */
   address: '香港香港島中環租庇利街',
@@ -43,6 +43,9 @@ export const ATTRACTION = {
   govTransportUrl: 'https://www.td.gov.hk/tc/transport_in_hong_kong/pedestrians/hillside_escalator/index.html',
   govTransportUrlEn:
     'https://www.td.gov.hk/en/transport_in_hong_kong/pedestrians/hillside_escalator/index.html',
+  /** 运输署交通通告（例行维护、临时安排），非实时运营状态 */
+  govNoticesUrl: 'https://www.td.gov.hk/tc/special_news/spnews.htm',
+  govNoticesUrlEn: 'https://www.td.gov.hk/en/special_news/spnews.htm',
   wikipediaUrl: 'https://en.wikipedia.org/wiki/Central%E2%80%93Mid-Levels_escalator',
   wikipediaUrlZh: 'https://zh.wikipedia.org/wiki/%E4%B8%AD%E7%92%B0%E8%87%B3%E5%8D%8A%E5%B1%B1%E8%87%AA%E5%8B%95%E6%89%B6%E6%A2%AF%E7%B3%BB%E7%B5%B1',
   tourismUrl: 'https://www.discoverhongkong.com/tc/place-to-go/travel.guide-central-mid-levels-escalator.html',

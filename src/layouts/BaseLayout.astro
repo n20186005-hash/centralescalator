@@ -104,6 +104,7 @@ const schemas=[...jsonLd,{'@context':'https://schema.org','@type':'WebPage','@id
             <p class="text-sm font-bold text-white/80">{t.explore}</p>
             <ul class="mt-3 space-y-2 text-sm text-white/70">
               <li><a href={homeHref} class="hover:text-white">{pick(locale, '扶手電梯完整指南', 'Full escalator guide')}</a></li>
+              <li><a href={`${homeHref}#guides`} class="hover:text-white">{pick(locale, '專題指南總覽', 'All topic guides')}</a></li>
               {
                 topicSlugs.map((slug) => (
                   <li>
@@ -121,6 +122,11 @@ const schemas=[...jsonLd,{'@context':'https://schema.org','@type':'WebPage','@id
               <li>
                 <a href={locale === 'en' ? ATTRACTION.govTransportUrlEn : ATTRACTION.govTransportUrl} rel="noopener nofollow" target="_blank" class="hover:text-white">
                   {pick(locale, '運輸署 · 上山扶梯系統', 'Transport Department · Hillside escalators')}
+                </a>
+              </li>
+              <li>
+                <a href={locale === 'en' ? ATTRACTION.govNoticesUrlEn : ATTRACTION.govNoticesUrl} rel="noopener nofollow" target="_blank" class="hover:text-white">
+                  {pick(locale, '運輸署 · 交通通告與維護', 'Transport Department · Notices and maintenance')}
                 </a>
               </li>
               <li>

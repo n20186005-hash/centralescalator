@@ -41,8 +41,35 @@ for (const page of ['index.html', 'en/index.html', 'schedule/index.html', 'en/sc
   }
   const rating = html.match(/"aggregateRating"[\s\S]{0,220}/);
   if (rating) console.log('rating:', rating[0].replace(/\s+/g, ' '));
-  const hasMapWords = /10604|10,604/.test(html);
+  const hasMapWords = /10641|10,641/.test(html);
   console.log('reviewCount present (body/schema):', hasMapWords);
 }
 
-console.log('\n--- headers file copied:', existsSync(`${dir}/_headers`), ' robots:', existsSync(`${dir}/robots.txt`), ' og-cover:', existsSync(`${dir}/images/og-cover.jpg`));
+console.log('\n--- headers file copied:', existsSync(`${dir}/_headers`), ' robotots:', existsSync(`${dir}/robots.txt`), ' og-cover:', existsSync(`${dir}/images/og-cover.jpg`));
+
+// 分批发布校验：对照 RELEASE_PHASE，确认已发布指南已构建、未发布指南未构建。
+const GUIDE_PHASES = {
+  P0: ['entrances', 'exits', 'route-map', 'mtr-central', 'mtr-hong-kong', 'uphill-downhill', 'return-to-central', 'accessibility'],
+  P1: ['history', 'architecture', 'interesting-facts', 'photography', 'best-time-to-visit', 'rainy-day-guide', 'nearby/tai-kwun', 'nearby/pmq', 'nearby/central-market', 'nearby/man-mo-temple', 'nearby/pottinger-street', 'nearby/graham-street', 'nearby/soho', 'nearby/lan-kwai-fong'],
+  P2: ['food/soho-restaurants', 'food/cha-chaan-teng', 'food/dim-sum', 'food/coffee-shops', 'food/bars-nightlife', 'shopping', 'itinerary/30-minutes', 'itinerary/one-hour', 'itinerary/half-day', 'itinerary/central-walking-tour', 'itinerary/soho-evening', 'family-guide', 'where-to-stay', 'visitor-faq'],
+};
+const RELEASE = process.env.RELEASE_PHASE || 'P2';
+const RANK = { P0: 0, P1: 1, P2: 2 };
+console.log(`\n--- guide pages (release ${RELEASE}) ---`);
+let built = 0, missing = 0, hidden = 0;
+for (const [phase, slugs] of Object.entries(GUIDE_PHASES)) {
+  for (const slug of slugs) {
+    const expected = RANK[phase] <= RANK[RELEASE];
+    for (const loc of ['', 'en/']) {
+      const p = `${loc}${slug}/index.html`;
+      const exists = existsSync(`${dir}/${p}`);
+      if (expected && exists) built++;
+      else if (expected && !exists) { missing++; console.log(`[MISSING ${phase}] ${p}`); }
+      else if (!expected && exists) { hidden++; console.log(`[SHOULD-NOT-BUILD ${phase}] ${p}`); }
+    }
+  }
+}
+console.log(`guide pages built: ${built}, missing: ${missing}, unexpectedly built: ${hidden}`);
+if (missing > 0) { console.log('RESULT: FAIL (missing expected guides)'); process.exit(1); }
+if (hidden > 0) { console.log('RESULT: FAIL (unexpected guides built)'); process.exit(1); }
+console.log('RESULT: OK');

@@ -43,8 +43,8 @@ export interface HomeContent {
 export const home: Record<Locale, HomeContent> = {
   "zh": {
     "meta": {
-      "title": "中環半山扶手電梯｜方向時段、起終點與交通指南",
-      "description": "核對中環半山扶手電梯06:00–10:00下行及上行10:00／10:20官方差異、皇后大道中至干德道路線、交通與無障礙限制，附2026-10-30地圖快照。"
+      "title": "中環半山扶手電梯｜2026開放時間、上落方向、入口地圖及交通攻略",
+      "description": "中環半山扶手電梯完整旅遊指南：查看每日上落方向與運作時間、入口及出口地圖、港鐵交通、沿途景點、SoHo美食與步行路線，出發前掌握實用資訊。"
     },
     "hero": {
       "badge": "香港島 · 中環至半山",
@@ -219,7 +219,7 @@ export const home: Record<Locale, HomeContent> = {
       },
       {
         "q": "Google地圖評價會自動更新嗎？",
-        "a": "不會。4.1星、10,604則為2026-10-30手工查閱的日期快照，不是本站收集的評論；Maps當時顯示午夜關閉也不是即時全線運作保證。"
+        "a": "不會。4.1星、10,641則為2026-11-09提供的日期快照，不是本站收集的評論；Maps當時顯示午夜關閉也不是即時全線運作保證。"
       }
     ],
     "map": {
@@ -234,8 +234,8 @@ export const home: Record<Locale, HomeContent> = {
   },
   "en": {
     "meta": {
-      "title": "Central–Mid-Levels Escalators | Direction, hours and route guide",
-      "description": "Plan the Queen’s Road Central–Conduit Road route: downhill 06:00–10:00, differing official uphill start times, transport, access limits and dated Maps facts."
+      "title": "Central–Mid-Levels Escalators Hong Kong | Hours, Map & Entrances",
+      "description": "Plan your visit to Hong Kong's Central–Mid-Levels Escalators. Find operating hours, uphill and downhill directions, entrances, route maps, nearby attractions, food and transport tips."
     },
     "hero": {
       "badge": "Hong Kong Island · Central to Mid-Levels",
@@ -410,7 +410,7 @@ export const home: Record<Locale, HomeContent> = {
       },
       {
         "q": "Do the Google Maps review figures update automatically?",
-        "a": "No. The 4.1 rating and 10,604 reviews are a manual snapshot dated 2026-10-30, not reviews collected here. Maps showing midnight closure did not verify live availability of the whole system."
+        "a": "No. The 4.1 rating and 10,641 reviews are a snapshot dated 2026-11-09, not reviews collected here. Maps showing midnight closure did not verify live availability of the whole system."
       }
     ],
     "map": {
